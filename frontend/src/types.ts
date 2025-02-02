@@ -4,13 +4,27 @@ export type Order = {
   symbol: string;
   decimals: number;
   name: string;
+  summary?: string;
+  info?: {
+    imageUrl?: string;
+    websites?: Array<{
+      label: string;
+      url: string;
+    }>;
+    socials?: Array<{
+      type: string;
+      url: string;
+    }>;
+  };
 };
 
 export type BuyTokenAction = {
-  message: string;
+  summary: string;
   order: Order[];
-  type: 'buy_token';
-  amount?: string;
+  type: 'token_buy';
+  amount: string | null;
+  risk: 'LOW' | 'MID' | 'HIGH';
+  date: string;
 };
 
 export type Action = BuyTokenAction;

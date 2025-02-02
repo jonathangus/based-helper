@@ -11,7 +11,12 @@ import { Decimal } from 'decimal.js';
 import { Spinner } from '../spinner';
 import { useMutation } from '@tanstack/react-query';
 import { fetchSwapParams } from '@/hooks/use-swap-params';
-import { useCapabilities, useSendCalls } from 'wagmi/experimental';
+import {
+  useCallsStatus,
+  useCapabilities,
+  useSendCalls,
+  useShowCallsStatus,
+} from 'wagmi/experimental';
 import { base } from 'viem/chains';
 
 type Props = {
@@ -59,13 +64,17 @@ export function PurchaseTokens({ order }: Props) {
     0
   );
 
-  const { writeContract } = useWriteContract();
+  const { writeContract, data: writeData } = useWriteContract();
 
   const { data: availableCapabilities } = useCapabilities();
-  const { data: hash, sendCalls, isPending } = useSendCalls({});
+  const { data: id, sendCalls, isPending, ...rest } = useSendCalls({});
+
+  const status = useCallsStatus({
+    id: id as `0x${string}`,
+  });
 
   const tx = useWaitForTransactionReceipt({
-    hash: hash as `0x${string}`,
+    hash: writeData,
   });
 
   const purchaseTokens = async () => {
@@ -89,7 +98,7 @@ export function PurchaseTokens({ order }: Props) {
       });
     } else {
       writeContract({
-        address: '0xcA11bde05977b3631167028862bE2a173976CA11',
+        address: '0xcA11bde05977b3631167028862bE2a173976CA11', // Multicall3
         abi: [
           {
             inputs: [
@@ -151,11 +160,13 @@ export function PurchaseTokens({ order }: Props) {
     }
   };
 
+  const isSuccess = tx.isSuccess || status.data?.status === 'CONFIRMED';
   const isLoading = swapParamsMutation.isPending || isPending || tx.isFetching;
+  const hash = writeData || status.data?.receipts?.[0]?.transactionHash;
 
   return (
     <div className="w-full space-y-4">
-      {tx.isSuccess && <div>Success!</div>}
+      {isSuccess && <div>Success!</div>}
       {hash && (
         <div className="flex items-center justify-center">
           <a
@@ -168,22 +179,24 @@ export function PurchaseTokens({ order }: Props) {
           </a>
         </div>
       )}
-      <Button
-        disabled={totalAllocation !== 100}
-        className="w-full"
-        onClick={purchaseTokens}
-      >
-        {isLoading ? (
-          <div className="flex items-center gap-2">
-            <Spinner />
-            <span>Loading swap data...</span>
-          </div>
-        ) : totalAllocation !== 100 ? (
-          'Allocations must total 100%'
-        ) : (
-          'Purchase Tokens'
-        )}
-      </Button>
+      {!isSuccess && (
+        <Button
+          disabled={totalAllocation !== 100}
+          className="w-full"
+          onClick={purchaseTokens}
+        >
+          {isLoading ? (
+            <div className="flex items-center gap-2">
+              <Spinner />
+              <span>Loading ...</span>
+            </div>
+          ) : totalAllocation !== 100 ? (
+            'Allocations must total 100%'
+          ) : (
+            'Purchase Tokens'
+          )}
+        </Button>
+      )}
     </div>
   );
 }

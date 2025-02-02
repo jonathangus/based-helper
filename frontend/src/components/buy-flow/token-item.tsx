@@ -5,7 +5,6 @@ import { type Address, formatUnits, parseEther } from 'viem';
 import type { Order } from '@/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
-import { useCapabilities } from 'wagmi/experimental';
 
 interface Props {
   order: Order;
@@ -35,26 +34,30 @@ export function TokenItem({
   });
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="font-bold text-lg">
-          {order.name} ({order.symbol})
-        </h3>
-        <span className="text-sm text-gray-400">
-          Decimals: {order.decimals}
-        </span>
+    <div className="space-y-4 bg-gray-800/50 rounded-lg p-4">
+      <div className="flex items-center space-x-4">
+        {order.info?.imageUrl && (
+          <img
+            src={order.info.imageUrl}
+            alt={order.name}
+            className="w-10 h-10 rounded-full"
+          />
+        )}
+        <div className="flex-1">
+          <div className="flex justify-between items-center">
+            <h3 className="font-bold text-lg text-gray-100">
+              {order.name} ({order.symbol})
+            </h3>
+            <span className="text-sm text-gray-400">
+              Target: {(Number(order.percentage) * 100).toFixed(0)}%
+            </span>
+          </div>
+          {order.summary && (
+            <p className="text-sm text-gray-400 mt-1">{order.summary}</p>
+          )}
+        </div>
       </div>
-      <p className="text-xs text-gray-400 truncate">
-        Contract:{' '}
-        <a
-          href={`https://basecscan.io/address/${order.contractAddress}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:underline"
-        >
-          {order.contractAddress}
-        </a>
-      </p>
+
       <div className="flex items-center space-x-2">
         <Slider
           value={[allocation]}
@@ -63,10 +66,36 @@ export function TokenItem({
           step={1}
           className="flex-1"
         />
-        <span className="min-w-[40px] text-right">
+        <span className="min-w-[40px] text-right text-gray-200">
           {allocation.toFixed(1)}%
         </span>
       </div>
+
+      <div className="flex flex-wrap gap-2">
+        {order.info?.websites?.map((website, index) => (
+          <a
+            key={index}
+            href={website.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-full text-gray-300"
+          >
+            {website.label}
+          </a>
+        ))}
+        {order.info?.socials?.map((social, index) => (
+          <a
+            key={index}
+            href={social.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-full text-gray-300"
+          >
+            {social.type}
+          </a>
+        ))}
+      </div>
+
       {params.error ? (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
@@ -78,7 +107,7 @@ export function TokenItem({
         </Alert>
       ) : (
         params.data?.priceRoute.destAmount && (
-          <div className="space-y-1 text-gray-300 text-sm">
+          <div className="text-gray-300 text-sm bg-gray-700/50 p-3 rounded-lg">
             <div>
               Sell {ethAmountNumber.toString()} ETH for{' '}
               {new Decimal(

@@ -13,10 +13,28 @@ export default function ActionView({ action }: Props) {
     return null;
   }
   return (
-    <div className="  ">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        <div>
-          <div className={`inline-block p-2 `}>{action.message}</div>
+    <div className="bg-gray-900 rounded-lg shadow-lg">
+      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="space-y-4">
+          <h2 className="text-xl font-bold text-gray-100">{action.summary}</h2>
+
+          <div className="flex items-center space-x-2">
+            <span
+              className={`px-3 py-1 rounded-full text-sm font-medium
+              ${
+                action.risk === 'LOW'
+                  ? 'bg-green-500/20 text-green-400'
+                  : action.risk === 'MID'
+                  ? 'bg-yellow-500/20 text-yellow-400'
+                  : 'bg-red-500/20 text-red-400'
+              }`}
+            >
+              {action.risk} RISK
+            </span>
+            <span className="text-sm text-gray-400">
+              {new Date(action.date).toLocaleDateString()}
+            </span>
+          </div>
         </div>
 
         <div>

@@ -6,7 +6,13 @@ import { Action } from '@/types';
 // import { useEffect } from 'react';
 import { kv } from '@vercel/kv';
 
-export default async function Home() {
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  console.log(id);
   const getExample = await kv.get('3f4d92ec-ccc5-4d77-bb73-cf1f720dc544');
 
   console.log(getExample);

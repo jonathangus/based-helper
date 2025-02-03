@@ -14,10 +14,9 @@ export default async function Home({
   const id = param.id[0];
 
   const data = (await kv.get(id)) as string;
-
-  const action = JSON.parse(
+  const action = typeof data === 'string' ? JSON.parse(
     data.replace('```', '').replace('json', '').replace('```', '')
-  ) as Action;
+  ) as Action : data;
 
 
   console.log(action);

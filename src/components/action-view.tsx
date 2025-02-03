@@ -1,12 +1,48 @@
 'use client';
 import { Action } from '@/types';
-import { UserActions } from './user-actions'; 
+import { UserActions } from './user-actions';  
+import { Terminal, TerminalTitle, TerminalContent, TerminalItem } from './terminal';
 
 type Props = {
   action: Action;
 };
 
 export default function ActionView({ action }: Props) {
+
+
+
+  return  ( <div className=" max-w-6xl mx-auto rounded-lg shadow-lg"><Terminal>
+
+    <TerminalItem>
+        <TerminalTitle >Time to purchase some tokens. Suggested purchase from agent:</TerminalTitle>
+        <TerminalContent>{action.summary}</TerminalContent>
+    </TerminalItem>
+
+
+      <TerminalItem>
+        <TerminalTitle >Risk level:</TerminalTitle>
+        <TerminalContent>
+          <span className={`${
+            action.risk === 'LOW'
+              ? 'text-green-400'
+              : action.risk === 'MID'
+              ? 'text-yellow-400' 
+              : 'text-red-400'
+          }`}>
+            {action.risk}
+          </span>
+        </TerminalContent>
+    </TerminalItem>
+
+       <TerminalItem>
+        <TerminalTitle >Date of recommendation:</TerminalTitle>
+        <TerminalContent>{new Date(action.date).toLocaleDateString('en-CA') + ' ' + new Date(action.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</TerminalContent>
+    </TerminalItem>
+ 
+       <UserActions action={action} />
+  </Terminal>
+</div>
+)
   return (
     <div className=" max-w-6xl mx-auto rounded-lg shadow-lg">
       <div className="flex-1 overflow-y-auto  ">

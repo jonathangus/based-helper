@@ -66,7 +66,7 @@ export function PurchaseTokens({ order }: Props) {
   const { writeContract, data: writeData } = useWriteContract();
 
   const { data: availableCapabilities } = useCapabilities();
-  const { data: id, sendCalls, isPending, ...rest } = useSendCalls({});
+  const { data: id, sendCalls, isPending,   } = useSendCalls({});
 
   const status = useCallsStatus({
     id: id as `0x${string}`,
@@ -181,7 +181,7 @@ export function PurchaseTokens({ order }: Props) {
       {!isSuccess && (
         <Button
           disabled={totalAllocation !== 100}
-          className="w-full"
+          className="w-full max-w-[200px]"
           onClick={purchaseTokens}
         >
           {isLoading ? (

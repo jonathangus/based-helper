@@ -4,6 +4,8 @@ import SourceInput from './source-input';
 import { TokenList } from './token-list';
 import { PurchaseTokens } from './purchase-tokens';
 import { useAccount } from 'wagmi';
+import { TerminalContent, TerminalItem } from '../terminal';
+import { TerminalTitle } from '../terminal';
 
 type Props = {
   action: BuyTokenAction;
@@ -32,11 +34,25 @@ export function BuyTokenFlow({ action }: Props) {
   return (
     <FormProvider {...methods}>
       <div>
-        <SourceInput />
-        <div className="h-16"></div>
-        <TokenList order={order} />
-        <div className="h-8"></div>
-        {address ? <PurchaseTokens order={order} /> : null}
+        <TerminalItem trail={false}>
+          <TerminalTitle>How much ETH would you like to spend?</TerminalTitle>
+          <TerminalContent ><SourceInput /></TerminalContent>
+        </TerminalItem>
+ 
+        <TerminalItem>
+          <TerminalTitle>Suggested token allocations:</TerminalTitle>
+            <div className="h-2"></div>
+          <TerminalContent border={false}><TokenList order={order} /></TerminalContent>
+        </TerminalItem>
+
+        {address ? <TerminalItem trail={false}>
+           <TerminalTitle showCursor>Execute trade:</TerminalTitle>
+         <TerminalContent border={false}>
+          <div className="my-2">
+             <PurchaseTokens order={order} />
+          </div>
+          </TerminalContent>
+          </TerminalItem> : null}
       </div>
     </FormProvider>
   );

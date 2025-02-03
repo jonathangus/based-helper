@@ -62,8 +62,8 @@ export function TokenList({ order }: Props) {
   };
 
   return (
-    <div className="space-y-4 text-left w-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="space-y-4 text-left w-full mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
         {order.map((token) => (
           <TokenItem
             key={token.contractAddress}

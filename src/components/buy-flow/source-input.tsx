@@ -30,8 +30,8 @@ export default function SourceInput() {
   }, []);
 
   return (
-    <div className="w-full max-w-sm space-y-2">
-      <Label htmlFor="eth-amount">ETH Amount</Label>
+    <div className="w-full max-w-sm space-y-2 my-4">
+      {/* <Label htmlFor="eth-amount">ETH Amount</Label> */}
       <div className="relative">
         <Input
           id="eth-amount"

@@ -1,7 +1,6 @@
 'use client';
 import { Action } from '@/types';
-import { UserActions } from './user-actions';
-import { useAccount } from 'wagmi';
+import { UserActions } from './user-actions'; 
 
 type Props = {
   action: Action;

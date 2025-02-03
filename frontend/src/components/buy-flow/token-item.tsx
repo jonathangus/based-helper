@@ -30,17 +30,17 @@ export function TokenItem({
     amount: ethAmountNumber.gt('0')
       ? parseEther(ethAmountNumber.toFixed())
       : 0n,
-    enabled: ethAmountNumber.gt('0'),
+    enabled: ethAmountNumber.gt('0') && Boolean(address),
   });
 
   return (
-    <div className="space-y-4 bg-gray-800/50 rounded-lg p-4">
+    <div className="space-y-4 bg-gray-800/50   p-4">
       <div className="flex items-center space-x-4">
         {order.info?.imageUrl && (
           <img
             src={order.info.imageUrl}
             alt={order.name}
-            className="w-10 h-10 rounded-full"
+            className="w-10 h-10 "
           />
         )}
         <div className="flex-1">
@@ -78,7 +78,7 @@ export function TokenItem({
             href={website.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-full text-gray-300"
+            className="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1  text-gray-300"
           >
             {website.label}
           </a>
@@ -89,7 +89,7 @@ export function TokenItem({
             href={social.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-full text-gray-300"
+            className="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1  text-gray-300"
           >
             {social.type}
           </a>

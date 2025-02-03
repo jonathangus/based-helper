@@ -14,7 +14,7 @@ export function TokenList({ order }: Props) {
   const inputAmount = watch('inputAmount');
   const { address } = useAccount();
   const handleAllocationChange = (symbol: string, value: number) => {
-    const newAllocations = { ...watch('tokens'), [symbol]: value.toString() };
+    const newAllocations = { ...watch('tokens'), [symbol]: value.toFixed(2) };
     const total = Object.values(newAllocations).reduce(
       (sum, val) => Number(sum) + Number(val),
       0
@@ -25,14 +25,37 @@ export function TokenList({ order }: Props) {
       const symbolsToAdjust = Object.keys(newAllocations).filter(
         (s) => s !== symbol
       );
-      const adjustment = excess / symbolsToAdjust.length;
 
-      symbolsToAdjust.forEach((s) => {
-        newAllocations[s] = Math.max(
-          0,
-          Number(newAllocations[s]) - adjustment
-        ).toString();
-      });
+      if (symbolsToAdjust.length > 0) {
+        // Distribute excess evenly
+        const adjustment = excess / symbolsToAdjust.length;
+
+        // First pass: apply main adjustment
+        symbolsToAdjust.forEach((s) => {
+          newAllocations[s] = Math.max(
+            0,
+            Number((Number(newAllocations[s]) - adjustment).toFixed(2))
+          ).toString();
+        });
+
+        // Calculate any remaining difference due to rounding
+        const newTotal = Object.values(newAllocations).reduce(
+          (sum, val) => Number(sum) + Number(val),
+          0
+        ) as number;
+        const remaining = Number((100 - newTotal).toFixed(2));
+
+        // If there's still a small difference, adjust the first available token
+        if (Math.abs(remaining) > 0.01) {
+          for (const s of symbolsToAdjust) {
+            const currentVal = Number(newAllocations[s]);
+            if (currentVal + remaining >= 0) {
+              newAllocations[s] = (currentVal + remaining).toFixed(2);
+              break;
+            }
+          }
+        }
+      }
     }
 
     setValue('tokens', newAllocations);

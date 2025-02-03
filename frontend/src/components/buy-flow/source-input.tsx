@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import { Address, formatEther, parseEther, parseUnits } from 'viem';
+import { Address, formatEther, parseEther } from 'viem';
 import { useAccount, useBalance } from 'wagmi';
-import { useForm, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
 
@@ -57,10 +57,11 @@ export default function SourceInput() {
           </Button>
         )}
       </div>
-
-      <p className="text-sm text-muted-foreground">
-        Balance: {balance.data?.formatted} ETH
-      </p>
+      {balance.data && (
+        <p className="text-sm text-muted-foreground">
+          Balance: {balance.data?.formatted} ETH
+        </p>
+      )}
     </div>
   );
 }

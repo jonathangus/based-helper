@@ -3,6 +3,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import SourceInput from './source-input';
 import { TokenList } from './token-list';
 import { PurchaseTokens } from './purchase-tokens';
+import { useAccount } from 'wagmi';
 
 type Props = {
   action: BuyTokenAction;
@@ -15,7 +16,7 @@ type FormValues = {
 
 export function BuyTokenFlow({ action }: Props) {
   const { order } = action;
-
+  const { address } = useAccount();
   const methods = useForm<FormValues>({
     defaultValues: {
       inputAmount: action?.amount || '0.00001',
@@ -35,7 +36,7 @@ export function BuyTokenFlow({ action }: Props) {
         <div className="h-16"></div>
         <TokenList order={order} />
         <div className="h-8"></div>
-        <PurchaseTokens order={order} />
+        {address ? <PurchaseTokens order={order} /> : null}
       </div>
     </FormProvider>
   );

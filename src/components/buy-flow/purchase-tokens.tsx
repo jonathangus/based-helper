@@ -10,12 +10,11 @@ import { Order } from '@/types';
 import { Decimal } from 'decimal.js';
 import { Spinner } from '../spinner';
 import { useMutation } from '@tanstack/react-query';
-import { fetchSwapParams } from '@/hooks/use-swap-params';
+import { fetchSwapParams } from '../../hooks/use-swap-params';
 import {
   useCallsStatus,
   useCapabilities,
-  useSendCalls,
-  useShowCallsStatus,
+  useSendCalls
 } from 'wagmi/experimental';
 import { base } from 'viem/chains';
 

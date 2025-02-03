@@ -22,7 +22,7 @@ if (!projectId) {
   throw new Error(providerErrMessage);
 }
 
-coinbaseWallet.preference = 'smartWalletOnly';
+// coinbaseWallet.preference = 'smartWalletOnly';
 
 const connectors = connectorsForWallets(
   [

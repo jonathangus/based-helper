@@ -10,9 +10,9 @@ type Props = {
 export default function ActionView({ action }: Props) {
   return (
     <div className=" max-w-6xl mx-auto rounded-lg shadow-lg">
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div className="flex-1 overflow-y-auto  ">
         <div className="space-y-4">
-          <h2 className="text-xl font-bold text-gray-100">{action.summary}</h2>
+          <h2 className="text-xl   mb-8">{action.summary}</h2>
 
           <div className="flex items-center space-x-2">
             <span

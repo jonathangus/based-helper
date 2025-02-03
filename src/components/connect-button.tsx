@@ -27,7 +27,9 @@ export function ConnectButton() {
     }
   }, [connectors, connect]);
 
-  return <RainbowConnectButton />;
+  return <div className=' max-w-6xl mx-auto rounded-lg shadow-lg my-8'>
+    <RainbowConnectButton />
+  </div>
   return (
     <div className="flex justify-end">
       <Wallet>

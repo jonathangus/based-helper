@@ -163,6 +163,11 @@ export function PurchaseTokens({ order }: Props) {
   const isLoading = swapParamsMutation.isPending || isPending || tx.isFetching;
   const hash = writeData || status.data?.receipts?.[0]?.transactionHash;
 
+  
+  if(totalAllocation !== 100) {
+    return <div className='text-secondary'>Allocations must total 100%</div>
+  }
+  
   return (
     <div className="w-full space-y-4">
       {isSuccess && <div>Success!</div>}

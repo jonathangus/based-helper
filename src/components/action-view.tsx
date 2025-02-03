@@ -11,7 +11,7 @@ export default function ActionView({ action }: Props) {
 
 
 
-  return  ( <div className=" max-w-6xl mx-auto rounded-lg shadow-lg"><Terminal>
+  return  ( <div className=" max-w-6xl my-12 mx-auto rounded-lg shadow-lg"><Terminal>
 
     <TerminalItem>
         <TerminalTitle >Time to purchase some tokens. Suggested purchase from agent:</TerminalTitle>

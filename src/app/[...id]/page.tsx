@@ -1,5 +1,4 @@
-import ActionView from '@/components/action-view';
-import { ConnectButton } from '@/components/connect-button';
+import ActionView from '@/components/action-view'; 
 import { Action } from '@/types';
 // import { useAccount } from 'wagmi';
 // import { startPoolListener } from '@/pool-listener';
@@ -20,9 +19,10 @@ export default async function Home({
     data.replace('```', '').replace('json', '').replace('```', '')
   ) as Action;
 
+
+  console.log(action);
   return (
-    <>
-      <ConnectButton />
+    <> 
       <ActionView action={action} />
     </>
   );

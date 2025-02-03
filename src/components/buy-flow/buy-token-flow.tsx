@@ -6,6 +6,8 @@ import { PurchaseTokens } from './purchase-tokens';
 import { useAccount } from 'wagmi';
 import { TerminalContent, TerminalItem } from '../terminal';
 import { TerminalTitle } from '../terminal';
+import { ConnectButton } from '../connect-button';
+import { Spinner } from '../spinner';
 
 type Props = {
   action: BuyTokenAction;
@@ -18,7 +20,7 @@ type FormValues = {
 
 export function BuyTokenFlow({ action }: Props) {
   const { order } = action;
-  const { address } = useAccount();
+  const { address, isConnecting, isReconnecting } = useAccount();
   const methods = useForm<FormValues>({
     defaultValues: {
       inputAmount: action?.amount || '0.00001',
@@ -30,6 +32,7 @@ export function BuyTokenFlow({ action }: Props) {
       ),
     },
   });
+  const addressIsLoading = isConnecting || isReconnecting;
 
   return (
     <FormProvider {...methods}>
@@ -45,14 +48,29 @@ export function BuyTokenFlow({ action }: Props) {
           <TerminalContent border={false}><TokenList order={order} /></TerminalContent>
         </TerminalItem>
 
-        {address ? <TerminalItem trail={false}>
+        {addressIsLoading && <TerminalItem trail={false}>
+           <TerminalTitle showCursor>Connecting wallet...</TerminalTitle>
+    
+          </TerminalItem> }
+
+        {Boolean(address) && <TerminalItem trail={false}>
            <TerminalTitle showCursor>Execute trade:</TerminalTitle>
          <TerminalContent border={false}>
           <div className="my-2">
              <PurchaseTokens order={order} />
           </div>
           </TerminalContent>
-          </TerminalItem> : null}
+          </TerminalItem>  }
+
+          {!address && !addressIsLoading && <TerminalItem trail={false}>
+           <TerminalTitle showCursor>Connect wallet to purchase:</TerminalTitle>
+          <TerminalContent border={false}>
+            <div className="my-2">
+              <ConnectButton />
+            </div>
+            </TerminalContent>
+            </TerminalItem>
+          }
       </div>
     </FormProvider>
   );

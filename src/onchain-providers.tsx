@@ -54,7 +54,7 @@ const wagmiConfig = createConfig({
 
 const queryClient = new QueryClient();
 
-function OnchainProviders({ children }: Props) {
+export function OnchainProviders({ children }: Props) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
@@ -70,5 +70,3 @@ function OnchainProviders({ children }: Props) {
     </WagmiProvider>
   );
 }
-
-export default OnchainProviders;

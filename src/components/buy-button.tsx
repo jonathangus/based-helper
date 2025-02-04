@@ -85,7 +85,8 @@ export default function BuyComponents() {
     ) {
       return {
         paymasterService: {
-          url: `${document.location.origin}/api/paymaster`,
+          // url: `${document.location.origin}/api/paymaster`,
+          url: process.env.NEXT_PUBLIC_PAYMASTER_SERVICE_URL,
         },
       };
     }

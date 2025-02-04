@@ -14,8 +14,9 @@ import { fetchSwapParams } from '../../hooks/use-swap-params';
 import {
   useCallsStatus,
   useCapabilities,
-  useSendCalls
+  useSendCalls,
 } from 'wagmi/experimental';
+import { useMemo } from 'react';
 import { base } from 'viem/chains';
 
 type Props = {
@@ -66,7 +67,7 @@ export function PurchaseTokens({ order }: Props) {
   const { writeContract, data: writeData } = useWriteContract();
 
   const { data: availableCapabilities } = useCapabilities();
-  const { data: id, sendCalls, isPending,   } = useSendCalls({});
+  const { data: id, sendCalls, isPending } = useSendCalls({});
 
   const status = useCallsStatus({
     id: id as `0x${string}`,
@@ -75,6 +76,23 @@ export function PurchaseTokens({ order }: Props) {
   const tx = useWaitForTransactionReceipt({
     hash: writeData,
   });
+
+  const capabilities = useMemo(() => {
+    if (!availableCapabilities || !base.id) return {};
+    const capabilitiesForChain = availableCapabilities[base.id];
+    if (
+      capabilitiesForChain['paymasterService'] &&
+      capabilitiesForChain['paymasterService'].supported
+    ) {
+      return {
+        paymasterService: {
+          // url: `${document.location.origin}/api/paymaster`,
+          url: process.env.NEXT_PUBLIC_PAYMASTER_SERVICE_URL,
+        },
+      };
+    }
+    return {};
+  }, [availableCapabilities, base.id]);
 
   const purchaseTokens = async () => {
     const swapParams: Record<
@@ -94,6 +112,7 @@ export function PurchaseTokens({ order }: Props) {
     if (batchSupported) {
       sendCalls({
         calls,
+        capabilities,
       });
     } else {
       writeContract({
@@ -163,11 +182,10 @@ export function PurchaseTokens({ order }: Props) {
   const isLoading = swapParamsMutation.isPending || isPending || tx.isFetching;
   const hash = writeData || status.data?.receipts?.[0]?.transactionHash;
 
-  
-  if(totalAllocation !== 100) {
-    return <div className='text-secondary'>Allocations must total 100%</div>
+  if (totalAllocation !== 100) {
+    return <div className="text-secondary">Allocations must total 100%</div>;
   }
-  
+
   return (
     <div className="w-full space-y-4">
       {isSuccess && <div>Success!</div>}

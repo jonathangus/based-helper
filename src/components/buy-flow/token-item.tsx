@@ -132,10 +132,6 @@ export function TokenItem({
                       </div>
                     )}
                     <div className="grid grid-cols-2 gap-2 text-xs text-gray-300">
-                      <div className="col-span-2 bg-gray-800/50 p-2 rounded">
-                        Smart Money Momentum:{' '}
-                        {order.keyMetrics.smartMoneyMomentum}
-                      </div>
                       <div className="bg-gray-800/50 p-2 rounded">
                         {order.explanation.goodTrader}
                       </div>

@@ -5,8 +5,14 @@ export type Order = {
   decimals: number;
   name: string;
   summary?: string;
-  keyMetrics?: {
-    smartMoneyMomentum: string;
+  explanation: {
+    tvl: string;
+    volume: string;
+    netBuys: string;
+    goodTrader: string;
+    heat: string;
+  };
+  keyMetrics: {
     liquidityHealth: string;
     riskAdjusted: string;
     marketContext: string;
@@ -14,30 +20,8 @@ export type Order = {
     volume: string;
     price: string;
   };
-  explanation?: {
-    tvl: string;
-    volume: string;
-    netBuys: string;
-    goodTrader: string;
-    heat: string;
-  };
   info?: {
     imageUrl?: string;
-    header?: string;
-    openGraph?: string;
-    websites?: Array<{
-      label: string;
-      url: string;
-    }>;
-    socials?: Array<{
-      type: string;
-      url: string;
-    }>;
-  };
-  tokenInfo?: {
-    imageUrl?: string;
-    header?: string;
-    openGraph?: string;
     websites?: Array<{
       label: string;
       url: string;
@@ -51,7 +35,6 @@ export type Order = {
 
 export type BuyTokenAction = {
   summary: string;
-  answer: string;
   order: Order[];
   type: 'token_buy';
   amount: string | null;

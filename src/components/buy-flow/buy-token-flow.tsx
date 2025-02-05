@@ -45,7 +45,9 @@ export function BuyTokenFlow({ action }: Props) {
         </TerminalItem>
 
         <TerminalItem>
-          <TerminalTitle>Suggested token allocations:</TerminalTitle>
+          <TerminalTitle>
+            Suggested token allocations with 2.5% slippage:
+          </TerminalTitle>
           <div className="h-2"></div>
           <TerminalContent border={false}>
             <TokenList order={order} />

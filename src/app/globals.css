@@ -109,3 +109,12 @@ body {
 button {
   border-radius: 0 !important;
 }
+
+
+body * {
+  border-radius: 0!important;
+}
+
+body,html, body > div {
+  height: 100%;
+}

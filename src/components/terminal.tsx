@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { cn } from "@/lib/utils";
-import { useEffect, useRef, useState } from "react";
-import { ReactNode } from "react";
-import React from "react";
+import { cn } from '@/lib/utils';
+import { useEffect, useRef, useState } from 'react';
+import { ReactNode } from 'react';
+import React from 'react';
 
 // Animation timing constants
-const STAGGER_DELAY =80; // in milliseconds
+const STAGGER_DELAY = 80; // in milliseconds
 const INITIAL_DELAY = 160;
 const STEP_INTERVAL = 90;
 
@@ -48,12 +48,12 @@ const TerminalContext = React.createContext<{
   contentDelay: 0,
 });
 
-export function Terminal({ 
-  children, 
-  className, 
+export function Terminal({
+  children,
+  className,
   autoScroll = true,
   initialDelay = INITIAL_DELAY,
-  stepInterval = STEP_INTERVAL 
+  stepInterval = STEP_INTERVAL,
 }: TerminalProps) {
   const [visibleItems, setVisibleItems] = useState<number[]>([]);
   const [contentDelay, setContentDelay] = useState(0);
@@ -71,7 +71,7 @@ export function Terminal({
   useEffect(() => {
     const timer = setTimeout(() => {
       const intervalId = setInterval(() => {
-        setVisibleItems(prev => {
+        setVisibleItems((prev) => {
           const nextItem = prev.length;
           if (nextItem < itemsRef.current) {
             return [...prev, nextItem];
@@ -91,16 +91,21 @@ export function Terminal({
   useEffect(() => {
     if (autoScroll && terminalRef.current) {
       setTimeout(() => {
-        terminalRef.current?.scrollTo({
-          top: terminalRef.current.scrollHeight,
-          behavior: 'smooth'
-        });
+        // terminalRef.current?.scrollTo({
+        //   top: terminalRef.current.scrollHeight,
+        //   behavior: 'smooth',
+        // });
       }, 100);
     }
   }, [visibleItems, autoScroll]);
 
   return (
-    <div className={cn("py-8 w-full border border-border p-4 bg-[#121212] relative font-mono bg-noise overflow-hidden", className)}>
+    <div
+      className={cn(
+        'py-8  w-full border border-border p-4 bg-[#121212] relative font-mono bg-noise overflow-hidden',
+        className
+      )}
+    >
       <div className="select-none  ">
         <div className="flex gap-2">
           <div className="w-3 h-3 rounded-full bg-white" />
@@ -111,10 +116,12 @@ export function Terminal({
 
       <div
         ref={terminalRef}
-        className="overflow-auto max-h-[380px] md:max-h-[90vh] text-[#F5F5F3] scroll-smooth"
+        className="overflow-auto max-h-[100%]    text-[#F5F5F3] scroll-smooth"
       >
-        <div className="text-xs flex flex-col tracking-wide leading-relaxed space-y-0.5 mt-4">
-          <TerminalContext.Provider value={{ registerItem, visibleItems, contentDelay }}>
+        <div className="text-xs flex flex-col tracking-wide leading-relaxed space-y-0.5 mt-4 pb-12">
+          <TerminalContext.Provider
+            value={{ registerItem, visibleItems, contentDelay }}
+          >
             {children}
           </TerminalContext.Provider>
         </div>
@@ -123,7 +130,11 @@ export function Terminal({
   );
 }
 
-export function TerminalItem({ children, className, trail = true }: TerminalItemProps) {
+export function TerminalItem({
+  children,
+  className,
+  trail = true,
+}: TerminalItemProps) {
   const { registerItem, visibleItems } = React.useContext(TerminalContext);
   const [id] = useState(() => registerItem());
   const [childrenVisible, setChildrenVisible] = useState(false);
@@ -145,7 +156,9 @@ export function TerminalItem({ children, className, trail = true }: TerminalItem
         ...child.props,
         style: {
           ...child.props.style,
-          transitionDelay: childrenVisible ? `${index * STAGGER_DELAY}ms` : '0ms',
+          transitionDelay: childrenVisible
+            ? `${index * STAGGER_DELAY}ms`
+            : '0ms',
           opacity: childrenVisible ? 1 : 0,
         },
       } as React.HTMLAttributes<HTMLElement>);
@@ -154,18 +167,34 @@ export function TerminalItem({ children, className, trail = true }: TerminalItem
   });
 
   return (
-    <div className={cn(
-      "transition-opacity duration-100 flex flex-col",
-      isVisible ? "opacity-100" : "opacity-0",
-      className
-    )}>
-      {staggeredChildren}
-      {trail && <TerminalContent>{null}</TerminalContent>}
+    <div
+      className={cn(
+        'transition-opacity duration-100 flex flex-col relative',
+        isVisible ? 'opacity-100' : 'opacity-0',
+        className
+      )}
+    >
+      <div
+        className="absolute left-0 top-0 bottom-0 border-l border-[#424242] transition-transform duration-200"
+        style={{
+          transform: isVisible ? 'translateX(0)' : 'translateX(-4px)',
+          opacity: isVisible ? 1 : 0,
+        }}
+      />
+      <div className="ml-2">
+        {staggeredChildren}
+        {trail && <TerminalContent border={false}>{null}</TerminalContent>}
+      </div>
     </div>
   );
 }
 
-export function TerminalTitle({ children, showCursor, className, style }: TerminalTitleProps & { style?: React.CSSProperties }) {
+export function TerminalTitle({
+  children,
+  showCursor,
+  className,
+  style,
+}: TerminalTitleProps & { style?: React.CSSProperties }) {
   const [cursorVisible, setCursorVisible] = useState(true);
 
   useEffect(() => {
@@ -177,12 +206,17 @@ export function TerminalTitle({ children, showCursor, className, style }: Termin
   }, []);
 
   return (
-    <div className={cn("flex transition-opacity duration-200", className)} style={style}>
+    <div
+      className={cn('flex flex-1 transition-opacity duration-200', className)}
+      style={style}
+    >
       <span>
         ◇ {children}
         {showCursor && (
           <span
-            className={`inline-block   h-4 bg-[#F5F5F3] ml-2 ${cursorVisible ? "opacity-100" : "opacity-0"}`}
+            className={`inline-block   h-4 bg-[#F5F5F3] ml-2 ${
+              cursorVisible ? 'opacity-100' : 'opacity-0'
+            }`}
           >
             █
           </span>
@@ -192,21 +226,17 @@ export function TerminalTitle({ children, showCursor, className, style }: Termin
   );
 }
 
-export function TerminalContent({ children, className, border = true, style }: TerminalContentProps & { style?: React.CSSProperties }) {
+export function TerminalContent({
+  children,
+  className,
+  style,
+}: TerminalContentProps & { style?: React.CSSProperties }) {
   return (
-    <div className={cn("flex transition-all duration-200", className)} style={style}>
-      {border && (
-        <span 
-          className="mr-2 transition-transform duration-200" 
-          style={{
-            transform: style?.opacity === 0 ? 'translateX(-4px)' : 'translateX(0)',
-            opacity: style?.opacity ?? 1
-          }}
-        >
-          │
-        </span>
-      )}
-      <span>{children}</span>
+    <div
+      className={cn('flex transition-all duration-200', className)}
+      style={style}
+    >
+      {children}
     </div>
   );
 }

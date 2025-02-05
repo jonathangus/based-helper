@@ -3,9 +3,14 @@ import { Slider } from '@/components/ui/slider';
 import { useSwapParams } from '@/hooks/use-swap-params';
 import { type Address, formatUnits, parseEther } from 'viem';
 import type { Order } from '@/types';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import { Card, CardHeader, CardContent, CardFooter } from '../ui/card';
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from '../ui/accordion';
 
 interface Props {
   order: Order;
@@ -32,11 +37,11 @@ export function TokenItem({
       ? parseEther(ethAmountNumber.toFixed())
       : 0n,
     enabled: ethAmountNumber.gt('0') && Boolean(address),
-  });
+  }); // Using default slippage of 2.5% (250 basis points) from useSwapParams
 
   return (
-    <div className="border border-primary p-1">
-      <Card className="rounded-none border-none p-4 space-y-4">
+    <div className=" ">
+      <Card className="rounded-none border-none p-4 ">
         <CardHeader className="p-0">
           <div className="flex items-center space-x-4">
             {order.info?.imageUrl && (
@@ -52,7 +57,8 @@ export function TokenItem({
                   {order.name} ({order.symbol})
                 </h3>
                 <span className="text-xs text-secondary">
-                  Suggested target: {(Number(order.percentage) * 100).toFixed(0)}%
+                  Suggested target:{' '}
+                  {(Number(order.percentage) * 100).toFixed(0)}%
                 </span>
               </div>
               {order.summary && (
@@ -63,7 +69,7 @@ export function TokenItem({
         </CardHeader>
 
         <CardContent className="p-0">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 mt-2">
             <Slider
               value={[allocation]}
               onValueChange={(values) => onAllocationChange(values[0])}
@@ -100,35 +106,65 @@ export function TokenItem({
               </a>
             ))}
           </div>
+
+          {order.explanation && order.keyMetrics && (
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="metrics" className="border-white/20">
+                <AccordionTrigger className="text-xs">
+                  View Details
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2">
+                    {params.data?.priceRoute.destAmount && (
+                      <div className=" bg-gray-800/50 p-2 rounded text-xs w-full">
+                        <div>
+                          Sell {ethAmountNumber.toString()} ETH for{' '}
+                          {new Decimal(
+                            formatUnits(
+                              BigInt(params.data.priceRoute.destAmount),
+                              order.decimals
+                            )
+                          )
+                            .toDecimalPlaces(2)
+                            .toString()}{' '}
+                          {order.symbol}
+                        </div>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-2 gap-2 text-xs text-gray-300">
+                      <div className="col-span-2 bg-gray-800/50 p-2 rounded">
+                        Smart Money Momentum:{' '}
+                        {order.keyMetrics.smartMoneyMomentum}
+                      </div>
+                      <div className="bg-gray-800/50 p-2 rounded">
+                        {order.explanation.goodTrader}
+                      </div>
+                      <div className="bg-gray-800/50 p-2 rounded">
+                        {order.explanation.heat}
+                      </div>
+                      <div className="bg-gray-800/50 p-2 rounded">
+                        {order.explanation.netBuys}
+                      </div>
+                      <div className="bg-gray-800/50 p-2 rounded">
+                        {order.explanation.tvl}
+                      </div>
+                      <div className="bg-gray-800/50 p-2 rounded">
+                        {order.explanation.volume}
+                      </div>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
         </CardContent>
 
         <CardFooter className="p-0">
-          {params.error ? (
-            <Alert variant="destructive">
+          {params.error && (
+            <div className="text-red-400 text-sm bg-red-950/50 p-2 rounded-lg w-full flex items-center gap-2">
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>
-                {params.error.message ||
-                  'An error occurred while fetching swap data.'}
-              </AlertDescription>
-            </Alert>
-          ) : (
-            params.data?.priceRoute.destAmount && (
-              <div className="text-gray-300 text-sm bg-gray-700/50 p-3 rounded-lg w-full">
-                <div>
-                  Sell {ethAmountNumber.toString()} ETH for{' '}
-                  {new Decimal(
-                    formatUnits(
-                      BigInt(params.data.priceRoute.destAmount),
-                      order.decimals
-                    )
-                  )
-                    .toDecimalPlaces(2)
-                    .toString()}{' '}
-                  {order.symbol}
-                </div>
-              </div>
-            )
+              {params.error.message || 'Failed to fetch swap data'}
+            </div>
           )}
         </CardFooter>
       </Card>

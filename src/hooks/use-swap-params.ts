@@ -48,10 +48,13 @@ export async function fetchSwapParams({
   });
 
   const response = await fetch(`https://api.paraswap.io/swap?${params}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch swap parameters');
+  const data = await response.json();
+
+  if (!response.ok || data.error) {
+    throw new Error(data.error || 'Failed to fetch swap parameters');
   }
-  return response.json() as Promise<SwapResponse>;
+
+  return data as SwapResponse;
 }
 
 export function useSwapParams({

@@ -39,38 +39,48 @@ export function BuyTokenFlow({ action }: Props) {
       <div>
         <TerminalItem trail={false}>
           <TerminalTitle>How much ETH would you like to spend?</TerminalTitle>
-          <TerminalContent ><SourceInput /></TerminalContent>
+          <TerminalContent>
+            <SourceInput />
+          </TerminalContent>
         </TerminalItem>
- 
+
         <TerminalItem>
           <TerminalTitle>Suggested token allocations:</TerminalTitle>
-            <div className="h-2"></div>
-          <TerminalContent border={false}><TokenList order={order} /></TerminalContent>
+          <div className="h-2"></div>
+          <TerminalContent border={false}>
+            <TokenList order={order} />
+          </TerminalContent>
         </TerminalItem>
 
-        {addressIsLoading && <TerminalItem trail={false}>
-           <TerminalTitle showCursor>Connecting wallet...</TerminalTitle>
-    
-          </TerminalItem> }
+        {addressIsLoading && (
+          <TerminalItem trail={false}>
+            <TerminalTitle showCursor>Connecting wallet...</TerminalTitle>
+          </TerminalItem>
+        )}
 
-        {Boolean(address) && <TerminalItem trail={false}>
-           <TerminalTitle showCursor>Execute trade:</TerminalTitle>
-         <TerminalContent border={false}>
-          <div className="my-2">
-             <PurchaseTokens order={order} />
-          </div>
-          </TerminalContent>
-          </TerminalItem>  }
-
-          {!address && !addressIsLoading && <TerminalItem trail={false}>
-           <TerminalTitle showCursor>Connect wallet to purchase:</TerminalTitle>
-          <TerminalContent border={false}>
-            <div className="my-2">
-              <ConnectButton />
-            </div>
+        {Boolean(address) && (
+          <TerminalItem trail={false}>
+            <TerminalTitle showCursor>Execute trade:</TerminalTitle>
+            <TerminalContent border={false}>
+              <div className="my-2">
+                <PurchaseTokens order={order} />
+              </div>
             </TerminalContent>
-            </TerminalItem>
-          }
+          </TerminalItem>
+        )}
+
+        {!address && !addressIsLoading && (
+          <TerminalItem trail={false}>
+            <TerminalTitle showCursor>
+              Connect wallet to purchase:
+            </TerminalTitle>
+            <TerminalContent border={false}>
+              <div className="my-2">
+                <ConnectButton />
+              </div>
+            </TerminalContent>
+          </TerminalItem>
+        )}
       </div>
     </FormProvider>
   );

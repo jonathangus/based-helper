@@ -118,3 +118,10 @@ body * {
 body,html, body > div {
   height: 100%;
 }
+body {
+    overflow: hidden;
+}
+
+html, body {
+  touch-action: manipulation;
+}

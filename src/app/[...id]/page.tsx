@@ -1,7 +1,9 @@
 import ActionView from '@/components/action-view';
-import { Action } from '@/types';
+import { Action, TokenExecutor } from '@/types';
 import { kv } from '@vercel/kv';
 import { Metadata } from 'next';
+import { getAddress } from 'viem';
+import { ExecuteFlowView } from '@/components/execute-flow/execute-flow-view';
 
 export async function generateMetadata({
   params,
@@ -11,6 +13,17 @@ export async function generateMetadata({
   const resolvedParams = await params;
   const id = resolvedParams.id[0];
   const data = (await kv.get(id)) as string;
+
+  if (!data) {
+    return {
+      title: 'No data',
+      description: 'No data',
+      openGraph: {
+        title: 'No data',
+        description: 'No data',
+      },
+    };
+  }
   const action: Action =
     typeof data === 'string'
       ? (JSON.parse(
@@ -20,9 +33,11 @@ export async function generateMetadata({
 
   console.log(data);
 
-  const title = `${action.order
-    .map((o) => '$' + o.symbol)
-    .join(', ')} is suggested by based_helper`;
+  const title = `${
+    action.order
+      ? action.order.map((o) => '$' + o.symbol).join(', ')
+      : 'No orders'
+  } is suggested by based_helper`;
   return {
     title: title,
     description: action.summary,
@@ -48,17 +63,33 @@ export default async function Home({
   const resolvedParams = await params;
   const id = resolvedParams.id[0];
   const data = (await kv.get(id)) as string;
-  const action =
-    typeof data === 'string'
-      ? (JSON.parse(
-          data.replace('```', '').replace('json', '').replace('```', '')
-        ) as Action)
-      : data;
 
-  console.log(action);
-  return (
-    <>
-      <ActionView action={action} />
-    </>
-  );
+  if (data) {
+    const action =
+      typeof data === 'string'
+        ? (JSON.parse(
+            data.replace('```', '').replace('json', '').replace('```', '')
+          ) as Action)
+        : data;
+
+    return (
+      <>
+        <ActionView action={action} />
+      </>
+    );
+  }
+
+  try {
+    const otherData = await kv.get(`${getAddress(id)}-executor`);
+    console.log('OTHERDATA:::', otherData);
+
+    if (otherData) {
+      const executorData: TokenExecutor = otherData as TokenExecutor;
+      return <ExecuteFlowView data={executorData} />;
+    }
+  } catch (e) {
+    console.error('Error fetching executor data:', e);
+  }
+
+  return <div>No data</div>;
 }

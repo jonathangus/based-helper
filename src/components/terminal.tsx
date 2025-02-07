@@ -22,6 +22,8 @@ interface TerminalItemProps {
   children: ReactNode;
   className?: string;
   trail?: boolean;
+  align?: 'left' | 'right';
+  show?: boolean;
 }
 
 interface TerminalTitleProps {
@@ -134,11 +136,13 @@ export function TerminalItem({
   children,
   className,
   trail = true,
+  align = 'left',
+  show,
 }: TerminalItemProps) {
   const { registerItem, visibleItems } = React.useContext(TerminalContext);
   const [id] = useState(() => registerItem());
   const [childrenVisible, setChildrenVisible] = useState(false);
-  const isVisible = visibleItems.includes(id);
+  const isVisible = show !== undefined ? show : visibleItems.includes(id);
 
   useEffect(() => {
     if (isVisible) {
@@ -171,6 +175,7 @@ export function TerminalItem({
       className={cn(
         'transition-opacity duration-100 flex flex-col relative',
         isVisible ? 'opacity-100' : 'opacity-0',
+        align === 'right' ? 'items-end text-right' : '',
         className
       )}
     >
@@ -179,9 +184,10 @@ export function TerminalItem({
         style={{
           transform: isVisible ? 'translateX(0)' : 'translateX(-4px)',
           opacity: isVisible ? 1 : 0,
+          display: align === 'right' ? 'none' : 'block',
         }}
       />
-      <div className="ml-2">
+      <div className={cn('ml-2', align === 'right' ? 'mr-2 ml-0' : '')}>
         {staggeredChildren}
         {trail && <TerminalContent border={false}>{null}</TerminalContent>}
       </div>
@@ -210,16 +216,33 @@ export function TerminalTitle({
       className={cn('flex flex-1 transition-opacity duration-200', className)}
       style={style}
     >
-      <span>
-        ◇ {children}
-        {showCursor && (
-          <span
-            className={`inline-block   h-4 bg-[#F5F5F3] ml-2 ${
-              cursorVisible ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            █
-          </span>
+      <span className="w-full">
+        {className?.includes('justify-end') ? (
+          <>
+            {children} ◇
+            {showCursor && (
+              <span
+                className={`inline-block h-4 bg-[#F5F5F3] ml-2 ${
+                  cursorVisible ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                █
+              </span>
+            )}
+          </>
+        ) : (
+          <>
+            ◇ {children}
+            {showCursor && (
+              <span
+                className={`inline-block h-4 bg-[#F5F5F3] ml-2 ${
+                  cursorVisible ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                █
+              </span>
+            )}
+          </>
         )}
       </span>
     </div>

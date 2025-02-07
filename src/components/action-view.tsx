@@ -17,6 +17,20 @@ export default function ActionView({ action }: Props) {
   return (
     <div className=" container  p-8 mx-auto h-full flex flex-col justify-center">
       <Terminal className="h-full flex-1">
+        {!action.senderName?.includes('User') && (
+          <>
+            <TerminalItem align="right" className="mb-4">
+              <TerminalTitle className="justify-end text-lg">
+                {action.senderName}
+              </TerminalTitle>
+              <TerminalContent>
+                {action.message?.replace(/<@\d+>/g, '').trim()}
+              </TerminalContent>
+              <TerminalContent>{null}</TerminalContent>
+            </TerminalItem>
+          </>
+        )}
+
         <TerminalItem>
           <TerminalTitle>
             Time to purchase some tokens. Suggested purchase from agent:

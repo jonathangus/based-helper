@@ -13,6 +13,7 @@ export type Order = {
     heat: string;
   };
   keyMetrics: {
+    smartMoneyMomentum: string;
     liquidityHealth: string;
     riskAdjusted: string;
     marketContext: string;
@@ -31,15 +32,20 @@ export type Order = {
       url: string;
     }>;
   };
+  tokenInfo?: any;
 };
 
 export type BuyTokenAction = {
-  summary: string;
-  order: Order[];
-  type: 'token_buy';
-  amount: string | null;
-  risk: 'LOW' | 'MID' | 'HIGH';
-  date: string;
+  id: string;
+  message: string;
+  senderName: string;
+  summary?: string;
+  answer?: string;
+  order?: Order[];
+  type?: 'token_buy';
+  amount?: string | null;
+  risk?: 'LOW' | 'MID' | 'HIGH';
+  date?: string;
 };
 
 export type Action = BuyTokenAction;
@@ -118,4 +124,28 @@ interface SwapExchange {
     }[];
     gasUSD: string;
   };
+}
+
+export interface ExecutorTransaction {
+  hash: string;
+  data: {
+    srcToken: string;
+    destToken: string;
+    destDecimals: number;
+    receiver: string;
+    userAddress: string;
+    amount: string;
+  }[];
+  receiver: string;
+  amount: string;
+}
+
+/**
+ * Represents the state of a token executor
+ */
+export interface TokenExecutor {
+  orderId: string;
+  address: string;
+  isDeployed: boolean; // Note: typo preserved from original code
+  txs: ExecutorTransaction[]; // Transaction history with proper typing
 }

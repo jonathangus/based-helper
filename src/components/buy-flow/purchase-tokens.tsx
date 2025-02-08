@@ -185,7 +185,25 @@ export function PurchaseTokens({ order }: Props) {
   if (totalAllocation !== 100) {
     return <div className="text-secondary">Allocations must total 100%</div>;
   }
-
+  if (isSuccess) {
+    return (
+      <div className="w-full space-y-4">
+        <div className="text-center text-green-500">
+          Transaction successful!
+        </div>
+        <div className="flex items-center justify-center">
+          <a
+            href={`https://basescan.org/tx/${hash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:text-blue-600 underline"
+          >
+            View transaction on Basescan
+          </a>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="w-full space-y-4">
       {isSuccess && <div>Success!</div>}
@@ -201,7 +219,13 @@ export function PurchaseTokens({ order }: Props) {
           </a>
         </div>
       )}
-      {!isSuccess && (
+
+      {isLoading && (
+        <div className="flex items-center justify-center">
+          <Spinner />
+        </div>
+      )}
+      {!isSuccess && !isLoading && (
         <Button
           disabled={totalAllocation !== 100}
           className="w-full max-w-[200px]"

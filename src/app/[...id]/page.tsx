@@ -84,8 +84,7 @@ export default async function Home({
     console.log('OTHERDATA:::', otherData);
 
     if (otherData) {
-      const executorData: TokenExecutor = otherData as TokenExecutor;
-      return <ExecuteFlowView data={executorData} />;
+      return <ExecuteFlowView address={id} />;
     }
   } catch (e) {
     console.error('Error fetching executor data:', e);

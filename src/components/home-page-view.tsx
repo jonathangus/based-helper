@@ -9,7 +9,6 @@ import {
 import React, { useState, useRef } from 'react';
 import { Footer } from './footer';
 import { useMutation } from '@tanstack/react-query';
-import { Spinner } from '@/components/spinner';
 import Link from 'next/link';
 
 export function HomePageView() {
@@ -44,39 +43,53 @@ export function HomePageView() {
   };
 
   const formatMessageWithLinks = (text: string) => {
-    // Match the specific URL pattern
+    // Match both URL and Ethereum address patterns
     const urlPattern = /https:\/\/based-helper\.vercel\.app\/([a-zA-Z0-9-]+)/g;
+    const ethAddressPattern = /(0x[a-fA-F0-9]{40})/g;
 
-    // First, let's get all parts and matches
-    const parts = text.split(urlPattern);
-    const matches = text.match(urlPattern) || [];
+    // First replace URLs
+    let processedText = text.replace(urlPattern, 'this link');
+
+    // Then replace Ethereum addresses
+    processedText = processedText.replace(ethAddressPattern, (match) => {
+      return match; // Keep the Ethereum address as is, but only match it once
+    });
+
+    // Split the processed text and convert to React elements
+    const parts = processedText.split(/(this link|0x[a-fA-F0-9]{40})/g);
 
     return parts.map((part, index) => {
-      // Clean up the part by removing any UUID that might appear at the start
-      const cleanedPart = part.replace(/^\s*[a-f0-9-]{36}\s*/, '');
-
-      // If it's not the last part, we need to add a link after it
-      if (index < matches.length) {
-        const match = matches[index];
-        const id = match.split('/').pop();
+      if (part === 'this link') {
+        const originalUrl = text.match(urlPattern)?.[0];
+        if (!originalUrl) return part;
+        const id = originalUrl.split('/').pop();
         return (
-          <React.Fragment key={index}>
-            {cleanedPart}
-            <Link
-              href={`/${id}`}
-              className="block text-blue-400 hover:text-blue-300 mb-4"
-            >
-              {match}
-            </Link>
-          </React.Fragment>
+          <Link
+            key={index}
+            target="_blank"
+            href={`/${id}`}
+            className="text-blue-400 hover:text-blue-300"
+          >
+            https://based-helper.vercel.app/{id}
+            <div className="h-4" />
+          </Link>
+        );
+      } else if (part.match(/^0x[a-fA-F0-9]{40}$/)) {
+        return (
+          <Link
+            key={index}
+            target="_blank"
+            href={`/${part}`}
+            className="text-blue-400 hover:text-blue-300"
+          >
+            {part}
+          </Link>
         );
       }
-      // Last part just returns the cleaned content
-      return cleanedPart;
+      return part;
     });
   };
 
-  console.log(chatMutation);
   return (
     <div className="container mx-auto p-8 h-full   flex flex-col justify-center">
       <div

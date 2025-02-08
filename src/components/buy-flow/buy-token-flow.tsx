@@ -3,11 +3,12 @@ import { useForm, FormProvider } from 'react-hook-form';
 import SourceInput from './source-input';
 import { TokenList } from './token-list';
 import { PurchaseTokens } from './purchase-tokens';
-import { useAccount } from 'wagmi';
+import { useAccount, useBalance } from 'wagmi';
 import { TerminalContent, TerminalItem } from '../terminal';
 import { TerminalTitle } from '../terminal';
 import { ConnectButton } from '../connect-button';
 import { Spinner } from '../spinner';
+import { FundButton } from '@coinbase/onchainkit/fund';
 
 type Props = {
   action: BuyTokenAction;
@@ -32,6 +33,9 @@ export function BuyTokenFlow({ action }: Props) {
       ),
     },
   });
+  const balance = useBalance({
+    address: address,
+  });
   const addressIsLoading = isConnecting || isReconnecting;
 
   return (
@@ -43,7 +47,16 @@ export function BuyTokenFlow({ action }: Props) {
             <SourceInput />
           </TerminalContent>
         </TerminalItem>
-
+        {balance.data && balance.data.value === BigInt('0') && (
+          <TerminalItem>
+            <TerminalTitle>
+              You missing ETH to do this transaction, fund your wallet:
+            </TerminalTitle>
+            <TerminalContent className="mb-4 mt-2">
+              <FundButton />
+            </TerminalContent>
+          </TerminalItem>
+        )}
         <TerminalItem>
           <TerminalTitle>
             Suggested token allocations with 2.5% slippage:
@@ -53,13 +66,11 @@ export function BuyTokenFlow({ action }: Props) {
             <TokenList order={order} />
           </TerminalContent>
         </TerminalItem>
-
         {addressIsLoading && (
           <TerminalItem trail={false}>
             <TerminalTitle showCursor>Connecting wallet...</TerminalTitle>
           </TerminalItem>
         )}
-
         {Boolean(address) && (
           <TerminalItem trail={false}>
             <TerminalTitle showCursor>Execute trade:</TerminalTitle>
@@ -70,7 +81,6 @@ export function BuyTokenFlow({ action }: Props) {
             </TerminalContent>
           </TerminalItem>
         )}
-
         {!address && !addressIsLoading && (
           <TerminalItem trail={false}>
             <TerminalTitle showCursor>

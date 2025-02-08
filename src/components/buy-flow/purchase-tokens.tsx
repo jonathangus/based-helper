@@ -72,9 +72,12 @@ export function PurchaseTokens({ order }: Props) {
   const status = useCallsStatus({
     id: id as `0x${string}`,
   });
+  const statusHash = status.data?.receipts?.find(
+    (receipt) => receipt.transactionHash
+  )?.transactionHash;
 
   const tx = useWaitForTransactionReceipt({
-    hash: writeData,
+    hash: writeData || statusHash,
   });
 
   const capabilities = useMemo(() => {
@@ -179,8 +182,12 @@ export function PurchaseTokens({ order }: Props) {
   };
 
   const isSuccess = tx.isSuccess || status.data?.status === 'CONFIRMED';
-  const isLoading = swapParamsMutation.isPending || isPending || tx.isFetching;
-  const hash = writeData || status.data?.receipts?.[0]?.transactionHash;
+  const isLoading =
+    swapParamsMutation.isPending ||
+    isPending ||
+    tx.isFetching ||
+    status.data?.status === 'PENDING';
+  const hash = writeData || statusHash;
 
   if (totalAllocation !== 100) {
     return <div className="text-secondary">Allocations must total 100%</div>;
@@ -221,7 +228,7 @@ export function PurchaseTokens({ order }: Props) {
       )}
 
       {isLoading && (
-        <div className="flex items-center justify-center">
+        <div className="ml-4">
           <Spinner />
         </div>
       )}

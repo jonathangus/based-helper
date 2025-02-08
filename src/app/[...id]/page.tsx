@@ -95,7 +95,6 @@ export default async function Home({
 
   try {
     const otherData = await kv.get(`${getAddress(id)}-executor`);
-    console.log('OTHERDATA:::', otherData);
 
     if (otherData) {
       return <ExecuteFlowView address={id} />;

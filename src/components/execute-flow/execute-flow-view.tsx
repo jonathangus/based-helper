@@ -3,6 +3,7 @@ import React from 'react';
 import { TokenExecutor } from '@/types';
 import { TransactionCard } from '../transcation-card';
 import { useQuery } from '@tanstack/react-query';
+import { formatUnits } from 'viem';
 interface ExecuteFlowViewProps {
   address: string;
 }
@@ -24,7 +25,13 @@ export const ExecuteFlowView: React.FC<ExecuteFlowViewProps> = ({
     refetchInterval: 5000, // Refetch every 5 seconds
   });
 
-  console.log('DATA:::', data);
+  // Add useEffect to remove overflow:hidden from body
+  React.useEffect(() => {
+    document.body.style.overflow = 'unset';
+    return () => {
+      document.body.style.overflow = ''; // Reset to default on cleanup
+    };
+  }, []);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -38,6 +45,7 @@ export const ExecuteFlowView: React.FC<ExecuteFlowViewProps> = ({
     return <div>No data available</div>;
   }
 
+  console.log(data);
   return (
     <div className="max-w-4xl mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Executor Data</h1>
@@ -56,9 +64,9 @@ export const ExecuteFlowView: React.FC<ExecuteFlowViewProps> = ({
 
       <h2 className="text-2xl font-semibold mb-4">Transactions</h2>
       {data.txs && data.txs.length > 0 ? (
-        data.txs.map((tx, index) =>
+        data.txs.map((tx: any, index) =>
           Array.isArray(tx) && tx.length === 0 ? null : (
-            <TransactionCard key={index} {...tx} />
+            <TransactionCard key={index} {...tx} amount={null} />
           )
         )
       ) : (

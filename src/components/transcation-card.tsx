@@ -1,4 +1,5 @@
 import type React from 'react';
+import { formatUnits } from 'viem';
 
 interface TransactionData {
   srcToken: string;
@@ -31,9 +32,6 @@ export const TransactionCard: React.FC<TransactionProps> = ({
       <p className="mb-1">
         <span className="font-medium">Receiver:</span> {receiver}
       </p>
-      <p className="mb-1">
-        <span className="font-medium">Amount:</span> {amount}
-      </p>
 
       {data &&
         data.map((txData, dataIndex) => (
@@ -59,7 +57,8 @@ export const TransactionCard: React.FC<TransactionProps> = ({
               {txData.userAddress}
             </p>
             <p className="mb-1">
-              <span className="font-medium">Amount:</span> {txData.amount}
+              <span className="font-medium">Amount:</span>{' '}
+              {formatUnits(txData.amount, txData.destDecimals)}
             </p>
           </div>
         ))}

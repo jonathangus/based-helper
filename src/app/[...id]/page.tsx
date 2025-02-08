@@ -15,6 +15,20 @@ export async function generateMetadata({
   const data = (await kv.get(id)) as string;
 
   if (!data) {
+    try {
+      const otherData = (await kv.get(
+        `${getAddress(id)}-executor`
+      )) as TokenExecutor;
+
+      if (otherData) {
+        return {
+          title: `Executor details for 0x3c635555B31003d3e2b4E3F750dcd95C9f7622af`,
+        };
+      }
+    } catch (e) {
+      console.error('Error fetching executor data:', e);
+    }
+
     return {
       title: 'No data',
       description: 'No data',

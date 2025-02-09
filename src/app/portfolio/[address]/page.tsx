@@ -37,9 +37,16 @@ export default async function PortfolioPage({
     const formatted = getAddress(address);
     console.log(formatted);
     const response = await getPortfolios({
-      addresses: ['0xBA78CD28F7132958235D278fF3C5DC5e6d34cc15'],
+      addresses: [formatted],
     });
+    if ('error' in response) {
+      console.error('Error fetching portfolio:', response.error);
+      return notFound();
+    }
 
+    if (response.portfolios.length === 0) {
+      return notFound();
+    }
     const portfolio = response.portfolios[0];
 
     return (

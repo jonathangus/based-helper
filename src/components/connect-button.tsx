@@ -87,7 +87,7 @@ export function ConnectButton({ linkPage = false }: { linkPage?: boolean }) {
                         href={`/portfolio/${account.address}`}
                         className="text-secondary"
                       >
-                        porfolio
+                        portfolio
                       </Link>
                     )}
                   </div>

@@ -4,7 +4,8 @@ import { kv } from '@vercel/kv';
 import { Metadata } from 'next';
 import { getAddress } from 'viem';
 import { ExecuteFlowView } from '@/components/execute-flow/execute-flow-view';
-
+import { notFound } from 'next/navigation';
+export const revalidate = 2;
 export async function generateMetadata({
   params,
 }: {
@@ -102,6 +103,8 @@ export default async function Home({
   } catch (e) {
     console.error('Error fetching executor data:', e);
   }
+
+  return notFound();
 
   return <div>No data</div>;
 }

@@ -62,6 +62,14 @@ export function Terminal({
   const terminalRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<number>(0);
 
+  // Add effect to manage body overflow
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = ''; // Reset to default on cleanup
+    };
+  }, []);
+
   // Register a new item and return its ID
   const registerItem = () => {
     const id = itemsRef.current;

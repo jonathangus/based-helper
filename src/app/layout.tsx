@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
+import '@coinbase/onchainkit/styles.css';
+import '@rainbow-me/rainbowkit/styles.css';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { OnchainProviders } from '../onchain-providers';
-import '@coinbase/onchainkit/styles.css';
-import '@rainbow-me/rainbowkit/styles.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

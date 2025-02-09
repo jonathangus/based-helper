@@ -119,9 +119,26 @@ body,html, body > div {
   height: 100%;
 }
 body {
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 html, body {
   touch-action: manipulation;
 }
+
+
+
+ 
+
+ @layer base {
+  .tokens button {
+  cursor: auto;
+}
+
+   :root {
+       --ock-bg-default: #000000;
+
+   }
+  }
+ 
+  

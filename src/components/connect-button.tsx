@@ -2,8 +2,9 @@
 import React from 'react';
 import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
-export function ConnectButton() {
+export function ConnectButton({ linkPage = false }: { linkPage?: boolean }) {
   return (
     <div className="max-w-6xl  ">
       <RainbowConnectButton.Custom>
@@ -80,6 +81,15 @@ export function ConnectButton() {
                         ? ` (${account.displayBalance})`
                         : ''}
                     </Button>
+
+                    {linkPage && (
+                      <Link
+                        href={`/portfolio/${account.address}`}
+                        className="text-secondary"
+                      >
+                        porfolio
+                      </Link>
+                    )}
                   </div>
                 );
               })()}

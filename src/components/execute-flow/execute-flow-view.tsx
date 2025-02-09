@@ -3,7 +3,7 @@ import React from 'react';
 import { TokenExecutor } from '@/types';
 import { TransactionCard } from '../transcation-card';
 import { useQuery } from '@tanstack/react-query';
-import { formatUnits } from 'viem';
+
 interface ExecuteFlowViewProps {
   address: string;
 }

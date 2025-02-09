@@ -33,7 +33,7 @@ export function Footer() {
             </Link>
           </div>
 
-          <ConnectButton />
+          <ConnectButton linkPage />
         </div>
       </div>
     </footer>

@@ -59,6 +59,13 @@ export function OnchainProviders({ children }: Props) {
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <OnchainKitProvider
+          config={{
+            appearance: {
+              name: 'Based Helper',
+              logo: 'https://ethglobal.b-cdn.net/projects/4tev7/logo/default.jpg',
+              theme: 'dark',
+            },
+          }}
           projectId={process.env.NEXT_PUBLIC_CDP_PROJECT_ID}
           apiKey={process.env.NEXT_PUBLIC_CDP_API_KEY}
           chain={base}

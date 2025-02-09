@@ -5,7 +5,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 Based Helper is an AI-powered DeFi trading assistant that harnesses real-time market data to automate token trades and deliver personalized experiences on Base. Accessible via Twitter, Lens, Discord, or our web app, it adapts its interface in real time to your commands.
 
-![Uploading Skärmavbild 2025-02-09 kl. 15.03.50.png…]()
+<img width="1251" alt="Skärmavbild 2025-02-09 kl  15 03 50" src="https://github.com/user-attachments/assets/0c6bf96f-14f5-4b89-b1f3-a6e21d346063" />
+
 
 ## Description
 
